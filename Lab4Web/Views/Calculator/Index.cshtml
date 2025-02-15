@@ -1,0 +1,69 @@
+﻿@model Lab4Web.Models.Calculate
+
+@{
+	ViewData["Title"]="Калькулятор";
+}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Калькулятор
+		</title>
+	</head>
+	<body>
+		<h2>Калькулятор</h2>
+	@Html.ValidationSummary(false,"Пожалуйста, исправьте следующие ошибки:",new {@class="validation-error"})
+	@using (Html.BeginForm("CalculateForm", "Calculator", FormMethod.Post))
+	{
+		<p>
+			@Html.LabelFor(x=>x.operand1)
+			@Html.TextBoxFor(x=>x.operand1, new {@class="calculator-input"})
+			
+		</p>
+		<p>
+			@Html.LabelFor(x=>x.operand2)
+			@Html.TextBoxFor(x=>x.operand2, new{@class="calculator-input"})
+			
+		</p>
+		@Html.DropDownListFor(x=>x.operation,new List<SelectListItem>{
+			new SelectListItem{Text="Сложение",Value="+"},
+			new SelectListItem{Text="Вычитание",Value="-"},
+			new SelectListItem{Text="Умножение",Value="*"},
+			new SelectListItem{Text="Деление",Value="/"}
+
+		},new{@class="calculator-input"})
+		<input type="submit" name="action" value="Вычислить" class="calculator-button"/>
+		<input type="submit" name="action" value="Очистить" class="calculator-button" />
+		@if (Model != null)
+		{
+			<p>
+				<strong>Результат :</strong> @Model.result
+			</p>
+			@if (Model.result == ViewBag.CheckValue)
+			{
+				<p style="color: green;">
+					Результат равен значению(@ViewBag.CheckValue)!
+				</p style>
+			}
+			else
+			{
+				<p style="color:red;">
+					Результат не равен значению (@ViewBag.CheckValue)!
+				</p style>
+			}
+		}
+
+	}
+	<div>
+		@Html.ActionLink("Посмотреть историю", "History","Calculator",null,new{@class="calculator-button"})
+	</div>
+</body>
+</html>
+
+
+@section Footer{
+	<p>
+		Калькулятор - простое приложение для вычислений
+	</p>
+}
