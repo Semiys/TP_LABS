@@ -12,7 +12,7 @@
 	{
 		string operation = cookie;
 		string[] operators = { "+", "-", "*", "/" };
-		int opIndex = operation.LastIndexOfAny(operators.Select(c => c[0]).ToArray());
+		int opIndex = operation.IndexOfAny(operators.Select(c => c[0]).ToArray());
 		if (opIndex >= 0)
 		{
 			string op = operation[opIndex].ToString();
