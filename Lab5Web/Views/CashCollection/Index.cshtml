@@ -1,0 +1,73 @@
+﻿@model CashCollection[]
+@using System.Text
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+
+@{
+	ViewData["Title"] = "Список инкассаций";
+
+	IHtmlContent InternalRenderCollections(IHtmlHelper<CashCollection[]> html, CashCollection[] collections)  
+	{
+		var table = new System.Text.StringBuilder();
+		for (int i = 0; i < collections.Length; i++)
+		{
+			if (collections[i] != null)
+			{
+				table.Append("<tr>");
+				table.AppendFormat("<td>{0}</td>", collections[i].RouteNumber);
+				table.AppendFormat("<td>{0}</td>", collections[i].CollectorName);
+				table.AppendFormat("<td>{0}</td>", collections[i].Amount);
+				table.AppendFormat("<td>{0}</td>", collections[i].CollectionDateTime);
+				table.AppendFormat("<td>{0}</td>", collections[i].IsCompleted ? "Да" : "Нет");
+				table.AppendFormat("<td>{0}</td>", collections[i].Notes);
+				table.Append("<td>");
+				table.AppendFormat("<a href='/CashCollection/Edit/{0}'>Редактировать</a> | ", collections[i].RouteNumber);
+				table.AppendFormat("<a href='/CashCollection/Details/{0}'>Просмотр</a>", collections[i].RouteNumber);
+				table.Append("</td>");
+				table.Append("</tr>");
+			}
+		}
+		return new HtmlString(table.ToString());
+	}
+}
+
+<h1>
+	Список инкассаций
+</h1>
+
+<p>
+	@Html.ActionLink("Создать новую","Create",new{currentIndex=ViewBag.CurrentIndex})
+</p>
+
+@if (Model.Length > 0)
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>@Html.LabelFor(model => model[0].RouteNumber)</th>
+				<th>@Html.LabelFor(model=>model[0].CollectorName)</th>
+				<th>@Html.LabelFor(model=>model[0].Amount)</th>
+				<th>@Html.LabelFor(model=>model[0].CollectionDateTime)</th>
+				<th>@Html.LabelFor(model=>model[0].IsCompleted)</th>
+				<th>@Html.LabelFor(model=>model[0].Notes)</th>
+				<th>Действия</th>
+			</tr>
+		</thead>
+		<tbody>
+			@if ((bool)ViewData["UseInternalHelper"])
+			{
+				@InternalRenderCollections(Html,Model)
+			}
+			else
+			{
+				@Html.ExternalRenderCollections(Model)
+			}
+		</tbody>
+	</table>
+
+}
+else
+{
+	<p>Нет данных для отображения</p>
+}
